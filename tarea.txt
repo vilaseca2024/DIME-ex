@@ -1,0 +1,326 @@
+{
+  "versionExcel": "1.11",
+  "datosGenerales": {
+    "identificacionDeclaracion": {
+      "numeroReferencia": "VLSC2536-24",
+      "numeroDocAsociado": null,
+      "numeroDim": null,
+      "aduanaDespacho": {
+        "codigo": "543",
+        "descripcion": "FRONTERA AVAROA"
+      },
+      "modalidadDespacho": {
+        "codigo": "02",
+        "descripcion": "ANTICIPADO"
+      },
+      "destinoRegimenAduanero": {
+        "codigo": "40",
+        "descripcion": "IMPORTACION PARA EL CONSUMO"
+      },
+      "tratamientoEspecial": {
+        "codigo": "000",
+        "descripcion": "TRATAMIENTO COMUN"
+      },
+      "formaEnvio": {
+        "codigo": "02",
+        "descripcion": "ENVIO TOTAL"
+      },
+      "tipoDespacho": {
+        "codigo": "01",
+        "descripcion": "DESPACHO PARCIAL"
+      },
+      "modalidadRegimen": {
+        "codigo": "4000",
+        "descripcion": "GENERAL"
+      }
+    },
+    "operadores": {
+      "importador": {
+        "numeroDocumento": "1020415021",
+        "tipoDocumento": {
+          "codigo": "NIT",
+          "descripcion": "NÚMERO DE IDENTIFICACIÓN TRIBUTARIA"
+        }
+      },
+      "entPubAbs": false
+    },
+    "lugares": {
+      "paisExportacion": {
+        "codigo": "CL",
+        "descripcion": "CHILE"
+      },
+      "paisProcedencia": {
+        "codigo": "CL",
+        "descripcion": "CHILE"
+      },
+      "paisTransito": {
+        "codigo": "CL",
+        "descripcion": "CHILE"
+      },
+      "aduanaIngreso": {
+        "codigo": "543",
+        "descripcion": "FRONTERA AVAROA"
+      },
+      "lugarEmbarque": {
+        "codigo": "CLMJS",
+        "descripcion": "MEJILLONES"
+      },
+      "fechaEmbarque": "27/09/2024",
+      "departamentoDestino": {
+        "codigo": "PO",
+        "descripcion": "POTOSI"
+      },
+      "localidadDestino": {
+        "codigo": "BO5CO",
+        "descripcion": "COLCHA \"K\""
+      }
+    },
+    "transporte": {
+      "cargaPeligrosa": true,
+      "desdeFrontera": {
+        "codigo": "3",
+        "descripcion": "TRANSPORTE CARRETERO"
+      },
+      "hastaFrontera": {
+        "codigo": "3",
+        "descripcion": "TRANSPORTE CARRETERO"
+      },
+      "gastosTransporteHastaLugarImportacion": "0",
+      "gastosTransporteHastaLugarEmbarque": "0",
+      "gastosTransporteHastaPuertoTransito": "0",
+      "gastosTransporteDesdePuertoTransito": "9408",
+      "gastosCargaDescargaManipulacion": "0",
+      "costoTotalSeguro": "193.56",
+      "otrosGastos": "0",
+      "otrasErogaciones": "0",
+      "proZonFra": true
+    },
+    "totalescontrol": {
+      "totalFac": "1",
+      "totalFob": "129907.2",
+      "totalIte": 0,
+      "totalBul": "1",
+      "totalPesBru": "160014",
+      "totalPesNet": "160014"
+    }
+  },
+  "proveedores": [
+    {
+      "tipoDocumento": null,
+      "numeroDocumento": null,
+      "razonSocial": "COMPAÑIA DE PETROLEOS DE CHILE COPEC S.A.",
+      "domicilio": {
+        "calleAvenida": "EL BOSQUE NORTE 0211/AV. ISIDORAGOYENECHEA 2915, PISO 20, LASCONDES",
+        "numero": "037",
+        "barrioZona": null,
+        "pais": {
+          "codigo": "CL",
+          "descripcion": "CHILE"
+        },
+        "departamento": {
+          "codigo": "RM",
+          "descripcion": "REGION METROPOLITANA DE SANTIAGO"
+        },
+        "ciudad": {
+          "codigo": "CLSCL",
+          "descripcion": "SANTIAGO"
+        },
+        "telefonoFax": "(56)57420302",
+        "sitioWeb": null,
+        "correoElectronico": "asilva@copec.cl"
+      }
+    }
+  ],
+  "datosTransacciones": [
+    {
+      "proveedor": {
+        "numeroDocumento": "",
+        "razonSocial": "COMPAÑIA DE PETROLEOS DE CHILE COPEC S.A.",
+        "condicionVendedor": {
+          "codigo": "01",
+          "descripcion": "FABRICANTE"
+        },
+        "especifiqueCondicionVendedor": null,
+        "paisAdquisicion": {
+          "codigo": "CL",
+          "descripcion": "CHILE"
+        }
+      },
+      "detalleTransaccion": {
+        "numeroFactura": "1039",
+        "fechaFactura": "2024-09-24",
+        "incoterms": {
+          "condicionEntrega": {
+            "codigo": "FCA",
+            "descripcion": "FRANCO TRANSPORTISTA - LIBRE TRANSPORTISTA"
+          },
+          "especifiqueCondicionEntrega": null,
+          "lugarEntrega": "MEJILLONES - CHILE"
+        },
+        "naturalezaTransaccion": {
+          "codigo": "01",
+          "descripcion": "COMPRAVENTA A PRECIO FIRME PARA LA EXPORTACION HACIA EL TERRITORIO ADUANERO DE LA COMUNIDAD ANDINA"
+        },
+        "especifiqueNaturalezaTransaccion": null,
+        "monedaTransaccion": {
+          "codigo": "USD",
+          "descripcion": "DÓLAR ESTADOUNIDENSE"
+        },
+        "valorTransaccion": "1948608",
+        "tipoCambio": 0,
+        "destinoMercancia": {
+          "codigo": "01",
+          "descripcion": "USO O CONSUMO PROPIO"
+        },
+        "especifiqueDestinoMercancia": null,
+        "facturaSujetoDescuento": false,
+        "nivelComercial": {
+          "codigo": "03",
+          "descripcion": "USUARIO INDUSTRIAL"
+        },
+        "especifiqueNivelComercial": null
+      },
+      "detallePagoTransaccion": {
+        "formaPago": {
+          "codigo": "1",
+          "descripcion": "PAGO ANTICIPADO"
+        },
+        "formaPagoEspecifique": null,
+        "medioPago": {
+          "codigo": "3",
+          "descripcion": "ORDEN DE PAGO SIMPLE-TRANSFERENCIA BANCARIA"
+        },
+        "medioPagoEspecifique": null
+      },
+      "valoresCostos": {
+        "valorFobTotalUsd": "129907.2"
+      }
+    }
+  ],
+  "datosMercancias": [
+    {
+      "factura": {
+        "numeroFactura": "1039",
+        "proveedor": {
+          "numeroDocumento": "",
+          "razonSocial": "COMPAÑIA DE PETROLEOS DE CHILE COPEC S.A."
+        }
+      },
+      "identificacionMercanciaItem": {
+        "subPartidaArancelaria": {
+          "codigo": "2710192100",
+          "descripcion": "- - - - Gasoils (gasóleo) (diésel)"
+        },
+        "unidadMedida": "METRO CÚBICO",
+        "unidadFisicaConversion": "LITRO",
+        "cantidadUnidadFisica": "192",
+        "cantidadFisicaConversion": "192000",
+        "unidadComercial": {
+          "codigo": "LTR",
+          "descripcion": "LITRO"
+        },
+        "unidadComercialEspecifique": null,
+        "cantidadUnidadComercial": "192000",
+        "precioUnitario": "0.6766",
+        "paisOrigen": {
+          "codigo": "CL",
+          "descripcion": "CHILE"
+        },
+        "acuerdoComercial": {
+          "codigo": "NA",
+          "descripcion": "NO APLICA"
+        },
+        "criterioCalificacionOrigen": null,
+        "embalaje": {
+          "codigo": "VL",
+          "descripcion": "LIQUIDO A GRANEL",
+          "tag": "false"
+        },
+        "pesoNeto": "160014",
+        "marcas": null,
+        "estado": {
+          "codigo": "1",
+          "descripcion": "NUEVA"
+        },
+        "estadoEspecifique": null,
+        "relacionItemEmbalaje": "1",
+        "resolucionRitex": null,
+        "codigoRitex": null,
+        "cantidadRitex": null,
+        "declaracionPresedente": null,
+        "subRegimenPresedente": null,
+        "itemPresedente": null,
+        "regCodNal": {
+          "codigo": " ",
+          "descripcion": " "
+        },
+        "ime": null,
+        "timbre": null,
+        "incExeIva": false,
+        "descripcionMercanciaComercial": {
+          "descripcionMinimasMercancias": [
+            {
+              "NombreMercancia": {
+                "codigo": "COMUN",
+                "descripcion": "Comunes"
+              }
+            },
+            {
+              "especifiqueNombreTxt": "PETROLEO DIESEL"
+            },
+            {
+              "DescripcionComerciallaMercancia": "COPEC"
+            },
+            {
+              "Tipo": "LIQUIDO"
+            },
+            {
+              "Clase": "-"
+            },
+            {
+              "Modelo": "NU1202 -CAS68476-34-6"
+            },
+            {
+              "Cuanti1": "GRADO B, VISCOSIDAD 1.9-4.1 MM2/S. A 40°C"
+            },
+            {
+              "Cuanti2": "60° FNORMALIZADO, N-OCTANOL/AGUA: 3.3. LOG POW,DERIVADO DE PETROLEO"
+            },
+            {
+              "ForPre": "2880000 LITROS A GRANELEN CISTERNAS"
+            },
+            {
+              "Composicion": "-"
+            },
+            {
+              "Uso": {
+                "codigo": "11",
+                "descripcion": "MINERIA"
+              }
+            },
+            {
+              "OtrasCaracteristicas": "OI 23001781, SUSTANCIA CONTROLADA, INFLAMABLE, PELIGROSO"
+            },
+            {
+              "AnoModelo": ""
+            },
+            {
+              "AnoFabMer": "0"
+            }
+          ],
+          "tipoMercancia": {
+            "codigo": "COMUN",
+            "descripcion": "Comunes"
+          },
+          "codigoOrigenDescripcionMinima": null
+        }
+      },
+      "informacionValoresTransaccionItem": {
+        "valorTransaccionItemUSD": "129907.2",
+        "valorFOBItemUSD": "129907.2",
+        "valorFOBUnitarioUsd": "0.677"
+      },
+      "observaciones": "OI 23001781 P1"
+    }
+  ]
+}

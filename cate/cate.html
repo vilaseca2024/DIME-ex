@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    p{
+        color: red;
+    }
+    img{
+        width: 500px;
+    }
+   
+    #paso2{
+        background-color: green;
+    }
+</style>
+<body>
+    <h1>hola mundo</h1>
+    <h2>hola mundo</h2>
+    <h3>hola mundo</h3>
+    <h4>hola mundo</h4>
+    <h5>hola mundo</h5>
+    <div >
+        <p>hola mundo</p>
+        <div id="paso">
+            <p>hola mundo</p>
+            <div id="paso2">
+                <p>hola mundo</p>
+            </div>
+        </div>
+    </div>
+    <div>
+        <input class="number" id="numero1" name="numero1"/>
+    </div>
+    <div>
+        <input class="number" id="numero2" name="numero2"/>
+    </div>
+   
+    <button onclick="sumar()">
+       sumar
+    </button>
+     
+    
+    
+    <!-- <img src="https://static.nationalgeographic.es/files/styles/image_3200/public/75552.ngsversion.1422285553360.webp?w=1450&h=967"> -->
+    
+
+</body>
+
+<script>
+    function sumar(){
+        var numero1 = parseFloat(document.getElementById('numero1').value);
+        var numero2 = parseFloat(document.getElementById('numero2').value);
+        var suma = numero1+numero2;
+        alert(suma);
+    }
+</script>
+</html>
