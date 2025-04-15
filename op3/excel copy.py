@@ -11,7 +11,7 @@ from datetime import datetime
 
 pdf_path = 'DIM2.pdf'
 template_path = 'mosol.xlsx'
-output_path = 'mosol_output_fixed6.xlsx'
+output_path = 'mosol_output_fixed7.xlsx'
 reader = PdfReader(open(pdf_path, 'rb'))
 full_text = ""
 for page in reader.pages:

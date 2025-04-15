@@ -4,7 +4,7 @@ from PyPDF2 import PdfReader
 
 pdf_path = 'DIM2.pdf'
 template_path = 'mosol.xlsx'
-output_path = 'mosol_output_fixed5.xlsx'
+output_path = 'mosol_output_fixed7.xlsx'
 reader = PdfReader(open(pdf_path, 'rb'))
 full_text = ""
 for page in reader.pages:
@@ -12,6 +12,8 @@ for page in reader.pages:
     if text:
         full_text += text + "\n"
 
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print(full_text)
 pattern = r'([A-Z]\d*(?:\.\d+)*)\.\s*([\s\S]*?)(?=(?:[A-Z]\d*(?:\.\d+)*)\.|$)'
 matches = re.findall(pattern, full_text, re.DOTALL)
 raw_mapping = {}
@@ -40,6 +42,9 @@ for id_actual, bloque in raw_mapping.items():
                 parsed_mapping[id_actual] = bloque.split(':', 1)[1].strip()
             else:
                 parsed_mapping[id_actual] = bloque
+
+print("+++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+print(parsed_mapping)
 
 wb = openpyxl.load_workbook(template_path)
 ws = wb.active
