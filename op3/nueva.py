@@ -18,7 +18,7 @@ class PDFProcessorApp:
         self.label_estado = Label(root, text="Cargue el archivo PDF para comenzar.")
         self.label_estado.pack(pady=10)
         self.boton_cargar_pdf = Button(root, text="Cargar PDF", command=self.cargar_pdf)
-        self.boton_cargar_pdf.pack(pady=5)
+        self.boton_cargar_pdf.pack(pady=10)
         self.label_excel = Label(root, text="")
         self.label_excel.pack(pady=10)
         self.boton_procesar = Button(root, text="Procesar", command=self.procesar, state="disabled")
