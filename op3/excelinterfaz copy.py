@@ -1,14 +1,12 @@
 import re
 import os
-import fitz  # PyMuPDF
+import fitz  
 import openpyxl
 from PyPDF2 import PdfReader
 from tkinter import Tk, Label, Button, filedialog, messagebox
 from collections import defaultdict
 import datetime
-
 sublevel_ids = {'H8.', 'E1.', 'I2.'}
-
 class PDFProcessorApp:
     def __init__(self, root):
         self.root = root
@@ -23,7 +21,6 @@ class PDFProcessorApp:
         self.label_excel.pack(pady=10)
         self.boton_procesar = Button(root, text="Procesar", command=self.procesar, state="disabled")
         self.boton_procesar.pack(pady=5)
-
     def cargar_pdf(self):
         ruta_pdf = filedialog.askopenfilename(
             title="Selecciona el archivo PDF",
@@ -45,7 +42,7 @@ class PDFProcessorApp:
             messagebox.showwarning("Error", "No se seleccionó el archivo Excel.")
             return
         self.label_excel.config(text="Archivo mosol para generar informe cargado correctamente.")
-        self.boton_procesar.config(state="normal")
+        self.boton_procesar.config(state="normal") 
     def extraer_campos_pdf(self, ruta_pdf):
         doc = fitz.open(ruta_pdf)
         zona_encabezado = fitz.Rect(0, 0, doc[0].rect.width, 60)
@@ -77,7 +74,7 @@ class PDFProcessorApp:
             if not lines:
                 continue
             if id_actual in {'J.', 'G.'}:
-                campos.append({'id': id_actual, 'titulo': lines[0], 'valor': lines[1] if len(lines)>1 else ''})
+                campos.append({'id': id_actual, 'titulo': lines[0], 'valor': lines[1] if len(lines) > 1 else ''})
                 for line in lines[2:]:
                     if re.match(r'^(Liquidación|Tipo|Sub totales)', line):
                         continue
@@ -87,55 +84,62 @@ class PDFProcessorApp:
                         last_val = line.split()[-1]
                         campos.append({'id': f"{id_actual.rstrip('.')}.{code}", 'titulo': code, 'valor': last_val})
                         continue
-                    if id_actual=='G.' and line.startswith('Total tributos a pagar'):
-                        parts=line.split()
+                    if id_actual == 'G.' and line.startswith('Total tributos a pagar'):
+                        parts = line.split()
                         campos.append({'id': f"{id_actual.rstrip('.')}.TOTAL", 'titulo': ' '.join(parts[:-1]), 'valor': parts[-1]})
                 continue
             if id_actual in sublevel_ids:
                 base = id_actual.rstrip('.')
                 base_lines, rest = [], []
-                found_num=False
+                found_num = False
                 for line in lines:
-                    if re.match(r'^\d+\s+', line): found_num=True
+                    if re.match(r'^\d+\s+', line):
+                        found_num = True
                     if not found_num:
                         base_lines.append(line)
                     else:
                         rest.append(line)
                 if base_lines:
-                    campos.append({'id': id_actual, 'titulo': base_lines[0], 'valor': ' '.join(base_lines[1:]).strip() if len(base_lines)>1 else ''})
-                cur_id=cur_title=cur_val=''
-                last_num=-1
+                    campos.append({'id': id_actual, 'titulo': base_lines[0], 'valor': ' '.join(base_lines[1:]).strip() if len(base_lines) > 1 else ''})
+                cur_id = cur_title = cur_val = ''
+                last_num = -1
                 for line in rest:
-                    m=re.match(r'^(\d+)\s+(.*)', line)
+                    m = re.match(r'^(\d+)\s+(.*)', line)
                     if m:
-                        num=int(m.group(1)); txt=m.group(2).strip()
-                        if num>last_num:
+                        num = int(m.group(1))
+                        txt = m.group(2).strip()
+                        if num > last_num:
                             if cur_id:
-                                campos.append({'id':cur_id,'titulo':cur_title,'valor':cur_val.strip()})
-                            cur_id=f"{base}.{num}"; cur_title=txt; cur_val=''; last_num=num
+                                campos.append({'id': cur_id, 'titulo': cur_title, 'valor': cur_val.strip()})
+                            cur_id = f"{base}.{num}"
+                            cur_title = txt
+                            cur_val = ''
+                            last_num = num
                         else:
-                            cur_val += ' '+line.strip()
+                            cur_val += ' ' + line.strip()
                     else:
-                        cur_val += ' '+line.strip()
+                        cur_val += ' ' + line.strip()
                 if cur_id:
-                    campos.append({'id':cur_id,'titulo':cur_title,'valor':cur_val.strip()})
+                    campos.append({'id': cur_id, 'titulo': cur_title, 'valor': cur_val.strip()})
                 continue
             titulo = lines[0]
-            valor = ' '.join(lines[1:]).strip() if len(lines)>1 else ''
-            campos.append({'id':id_actual,'titulo':titulo,'valor':valor})
+            valor = ' '.join(lines[1:]).strip() if len(lines) > 1 else ''
+            campos.append({'id': id_actual, 'titulo': titulo, 'valor': valor})
         for c in campos:
             if c['valor']:
-                m=re.match(r'^([^\d,]*\([\w\s]+\))\s+([\d,\.]+)$',c['valor'])
+                m = re.match(r'^([^\d,]*\([\w\s]+\))\s+([\d,\.]+)$', c['valor'])
                 if m:
-                    c['titulo'] += ' '+m.group(1).strip()
+                    c['titulo'] += ' ' + m.group(1).strip()
                     c['valor'] = m.group(2).strip()
-        clean=[]; prev=None
+        clean = []
+        prev = None
         for c in campos:
-            if c['id']=='A.' and prev and prev['id'] in {'B1.','B2.'}:
-                prev['valor'] = (prev['valor']+' '+c['titulo']+' '+c['valor']).strip()
+            if c['id'] == 'A.' and prev and prev['id'] in {'B1.', 'B2.'}:
+                prev['valor'] = (prev['valor'] + ' ' + c['titulo'] + ' ' + c['valor']).strip()
             else:
-                clean.append(c); prev=c
-        campos=clean
+                clean.append(c)
+                prev = c
+        campos = clean
         for c in campos:
             if c['id'] == 'H8.9':
                 if not c['valor']:
@@ -149,50 +153,39 @@ class PDFProcessorApp:
                     m = re.match(r'(\d+)', c['valor'])
                     if m:
                         c['valor'] = m.group(1)
-        for idx,c in enumerate(campos):
+        for idx, c in enumerate(campos):
             if 'Nueva pagina' in c['valor']:
-                if idx>=4 and all(campos[idx-k-1]['valor']=='' for k in range(4)):
-                    vals=c['valor'].split()
-                    if len(vals)==5 and all(re.match(r'^\d+(?:\.\d+)?$',v) for v in vals):
-                        for j in range(4): campos[idx-4+j]['valor']=vals[j]
-                        campos[idx]['valor']=vals[-1]
+                if idx >= 4 and all(campos[idx - k - 1]['valor'] == '' for k in range(5)):
+                    limpia = c['valor'].replace("Nueva pagina", "").strip()
+                    vals = limpia.split()
+                    print("Valores extraídos después de limpiar:", vals)
+                    if len(vals) == 5 and all(re.match(r'^\d+(?:\.\d+)?$', v) for v in vals):
+                        for j in range(4):
+                            campos[idx - 4 + j]['valor'] = vals[j]
+                        campos[idx]['valor'] = vals[-1]
                     else:
-                        nums=re.findall(r'\d+(?:\.\d+)?',c['valor'])
+                        nums = re.findall(r'\d+(?:\.\d+)?', c['valor'])
                         if nums:
-                            first=re.search(r'\d+(?:\.\d+)?',c['valor']); last=None
-                            for m in re.finditer(r'\d+(?:\.\d+)?',c['valor']): last=m
-                            prefix=c['valor'][:first.start()].strip(); suffix=c['valor'][last.end():].strip()
-                            segs=[prefix]+nums+[suffix]
-                            if len(segs)==4:
-                                for j in range(4): campos[idx-4+j]['valor']=segs[j]
-                                campos[idx]['valor']=''
-        try: os.remove(ruta_redacted)
-        except: pass
+                            first = re.search(r'\d+(?:\.\d+)?', c['valor'])
+                            last = None
+                            for m in re.finditer(r'\d+(?:\.\d+)?', c['valor']):
+                                last = m
+                            prefix = c['valor'][:first.start()].strip()
+                            suffix = c['valor'][last.end():].strip()
+                            segs = [prefix] + nums + [suffix]
+                            if len(segs) == 4:
+                                for j in range(4):
+                                    campos[idx - 4 + j]['valor'] = segs[j]
+                                campos[idx]['valor'] = ''
+        try:
+            os.remove(ruta_redacted)
+        except:
+            pass
+
+        with open("campsoAA.txt", "w", encoding="utf-8") as out:
+            for c in campos:
+                out.write(f"{c['id']}  Título: {c['titulo']}  =>  Valor: {c['valor']}\n")
         return campos
-
-
-    def agrupar_subgrupos_e_h_i_j(self):
-        grupos = []
-        grupo_actual = {'E': [], 'H': [], 'I': [], 'J': []}
-
-        for campo in self.campos:
-            id_letra = campo['id'][0]  # Primer caracter del ID (E, H, I, J, etc.)
-
-            if campo['id'].startswith('E1.'):  # Marca un nuevo grupo
-                if any(grupo_actual.values()):  # Guardar el grupo anterior si tiene datos
-                    grupos.append(grupo_actual)
-                    grupo_actual = {'E': [], 'H': [], 'I': [], 'J': []}
-                grupo_actual['E'].append(campo)
-
-            elif id_letra in grupo_actual:
-                grupo_actual[id_letra].append(campo)
-
-        if any(grupo_actual.values()):  # Agrega el último grupo si no está vacío
-            grupos.append(grupo_actual)
-
-        return grupos
-
-
     def procesar(self):
         campos = self.campos
         dict_campos = defaultdict(list)
@@ -246,7 +239,7 @@ class PDFProcessorApp:
                     while ws.cell(row=row, column=col[0].column).value is not None:
                         row += 1
                     ws.cell(row=row, column=col[0].column, value=v_float)
-        save_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files","*.xlsx")])
+        save_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
         if save_path:
             wb.save(save_path)
             messagebox.showinfo("Éxito", f"Guardado en: {save_path}")
@@ -256,6 +249,6 @@ class PDFProcessorApp:
 if __name__ == '__main__':
     root = Tk()
     root.geometry('520x300')
-    root.resizable(0,1)
+    root.resizable(0, 1)
     app = PDFProcessorApp(root)
     root.mainloop()

@@ -6,9 +6,7 @@ from PyPDF2 import PdfReader
 from tkinter import Tk, Label, Button, filedialog, messagebox
 from collections import defaultdict
 import datetime
-
 sublevel_ids = {'H8.', 'E1.', 'I2.'}
-
 class PDFProcessorApp:
     def __init__(self, root):
         self.root = root
@@ -23,7 +21,6 @@ class PDFProcessorApp:
         self.label_excel.pack(pady=10)
         self.boton_procesar = Button(root, text="Procesar", command=self.procesar, state="disabled")
         self.boton_procesar.pack(pady=5)
-
     def cargar_pdf(self):
         ruta_pdf = filedialog.askopenfilename(
             title="Selecciona el archivo PDF",
@@ -37,7 +34,6 @@ class PDFProcessorApp:
         except Exception as e:
             messagebox.showerror("Error", f"Error al procesar el PDF: {e}")
             return
-
         self.ruta_excel = filedialog.askopenfilename(
             title="Selecciona el archivo Excel (mosol)",
             filetypes=[("Excel files", "*.xlsx")]
@@ -47,7 +43,6 @@ class PDFProcessorApp:
             return
         self.label_excel.config(text="Archivo mosol para generar informe cargado correctamente.")
         self.boton_procesar.config(state="normal") 
-
     def extraer_campos_pdf(self, ruta_pdf):
         doc = fitz.open(ruta_pdf)
         zona_encabezado = fitz.Rect(0, 0, doc[0].rect.width, 60)
@@ -83,7 +78,7 @@ class PDFProcessorApp:
                 for line in lines[2:]:
                     if re.match(r'^(Liquidación|Tipo|Sub totales)', line):
                         continue
-                    m = re.match(r'^(GA|IVA|IDHE)\b', line)
+                    m = re.match(r'^(GA|IVA)\b', line)
                     if m:
                         code = m.group(1)
                         last_val = line.split()[-1]
@@ -163,6 +158,7 @@ class PDFProcessorApp:
                 if idx >= 5 and all(campos[idx - k - 1]['valor'] == '' for k in range(5)):
                     limpia = c['valor'].replace("Nueva pagina", "").strip()
                     vals = limpia.split()
+                    print("Valores extraídos después de limpiar:", vals)
                     if len(vals) == 5 and all(re.match(r'^\d+(?:\.\d+)?$', v) for v in vals):
                         for j in range(4):
                             campos[idx - 4 + j]['valor'] = vals[j]
@@ -190,119 +186,63 @@ class PDFProcessorApp:
             for c in campos:
                 out.write(f"{c['id']}  Título: {c['titulo']}  =>  Valor: {c['valor']}\n")
         return campos
-
-
-    def obtener_numero_filas_f2(self):
-        for campo in self.campos:
-            if campo['id'] == 'F2.':
-                try:
-                    return int(campo['valor'])
-                except ValueError:
-                    return 0
-        return 0
-
-    def convertir_a_float(self, valor):
-        try:
-            return float(valor.replace(',', '.'))
-        except Exception:
-            return valor
-
-    def construir_filas_completas(self, num_filas):
-        """
-        Construye filas usando eventos de inicio alternados A1. y H1.
-        Si falta un valor en un bloque, hereda el anterior.
-        """
-        # IDs hasta K1.
-        ids_validos = []
-        for c in self.campos:
-            ids_validos.append(c['id'])
-            if c['id'] == 'K1.':
-                break
-        ids_validos = list(dict.fromkeys(ids_validos))
-        if not ids_validos:
-            return [], []
-
-        # Datos secuenciales filtrados
-        raw_data = [(c['id'], c['valor']) for c in self.campos if c['id'] in ids_validos]
-        # Definir triggers alternados
-        triggers = ['A1.', 'B1.', 'C1.' 'D1.', 'E1.', 'F1', 'H1', 'I1', 'J1']
-        # Recolectar eventos de inicio para ambos triggers
-        events = [(i, iid) for i, (iid, _) in enumerate(raw_data) if iid in triggers]
-        # Tomar solo hasta num_filas
-        start_events = events[:num_filas]
-
-        filas = []
-        ultimos = {iid: '' for iid in ids_validos}
-
-        for k, (inicio, trig_id) in enumerate(start_events):
-            # Determinar final del bloque como siguiente evento o fin de datos
-            fin = start_events[k+1][0] if k+1 < len(start_events) else len(raw_data)
-            fila = {}
-            for iid in ids_validos:
-                if iid == trig_id:
-                    val = raw_data[inicio][1].strip()
-                else:
-                    # buscar próxima ocurrencia en el bloque
-                    encontrado = None
-                    for j in range(inicio+1, fin):
-                        if raw_data[j][0] == iid:
-                            encontrado = raw_data[j][1].strip()
-                            break
-                    # heredar si no se encontró
-                    val = encontrado if (encontrado is not None and encontrado != '') else ultimos[iid]
-
-                # convertir si es numérico
-                if val:
-                    val = self.convertir_a_float(val)
-                fila[iid] = val
-                # actualizar heredados (excepto H/I/J)
-                if val != '' and iid[0] not in {'K'}:
-                    ultimos[iid] = val
-            filas.append(fila)
-
-        return filas, ids_validos
-
-    def find_first_empty_row(self, ws, header_cols):
-        row = 2
-        while True:
-            if all(ws.cell(row=row, column=col).value in [None, ''] for col in header_cols):
-                return row
-            row += 1
-
     def procesar(self):
-        num_filas = self.obtener_numero_filas_f2()
-        if num_filas <= 0:
-            messagebox.showerror("Error", "El campo F2. no tiene un número válido.")
-            return
-
-        filas, ids_validos = self.construir_filas_completas(num_filas)
+        campos = self.campos
+        dict_campos = defaultdict(list)
+        for c in campos:
+            dict_campos[c['id']].append(c['valor'])
         try:
             wb = openpyxl.load_workbook(self.ruta_excel)
         except Exception as e:
             messagebox.showerror("Error", f"No se pudo abrir el Excel: {e}")
             return
         ws = wb.active
-
-        header_mapping = {}
-        header_cols = []
-        for cell in ws[1]:
-            if cell.value:
-                header_mapping[cell.value] = cell.column
-                header_cols.append(cell.column)
-
-        fila_inicio = self.find_first_empty_row(ws, header_cols)
-        for idx, rowdata in enumerate(filas):
-            fila_excel = fila_inicio + idx
-            for hid, col in header_mapping.items():
-                ws.cell(row=fila_excel, column=col, value=rowdata.get(hid, ""))
-
+        for col in ws.iter_cols(min_row=1, max_row=1):
+            header = col[0].value
+            if not header:
+                continue
+            if '+' in str(header):
+                parts = [p.strip() for p in str(header).split('+')]
+                total = 0.0
+                for p in parts:
+                    for val in dict_campos.get(p, []):
+                        if isinstance(val, str) and re.match(r'^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$', val):
+                            try:
+                                dt = datetime.datetime.strptime(val, "%d/%m/%Y %H:%M")
+                                val = dt.strftime("%d/%m/%Y")
+                            except:
+                                pass
+                        try:
+                            total += float(val)
+                        except:
+                            pass
+                row = 3
+                while ws.cell(row=row, column=col[0].column).value is not None:
+                    row += 1
+                ws.cell(row=row, column=col[0].column, value=total)
+            else:
+                vals = dict_campos.get(str(header), [])
+                row = 3
+                for v in vals:
+                    if isinstance(v, str) and "Nueva pagina" in v:
+                        continue
+                    if isinstance(v, str) and re.match(r'^\d{2}/\d{2}/\d{4} \d{2}:\d{2}$', v):
+                        try:
+                            dt = datetime.datetime.strptime(v, "%d/%m/%Y %H:%M")
+                            v = dt.strftime("%d/%m/%Y")
+                        except:
+                            pass
+                    try:
+                        v_float = float(v)
+                    except:
+                        v_float = v
+                    while ws.cell(row=row, column=col[0].column).value is not None:
+                        row += 1
+                    ws.cell(row=row, column=col[0].column, value=v_float)
         save_path = filedialog.asksaveasfilename(defaultextension=".xlsx", filetypes=[("Excel files", "*.xlsx")])
         if save_path:
-            try:
-                wb.save(save_path)
-                messagebox.showinfo("Éxito", f"Guardado en: {save_path}")
-            except Exception as e:
-                messagebox.showerror("Error", f"No se pudo guardar el Excel: {e}")
+            wb.save(save_path)
+            messagebox.showinfo("Éxito", f"Guardado en: {save_path}")
         else:
             messagebox.showwarning("Cancelado", "No se guardó el archivo.")
 
